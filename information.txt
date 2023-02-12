@@ -27,4 +27,4 @@ recuruter d'autres.
 --> deduction naive : c'est les soldats.
 - Certaines d'autres exploitent le voisinnage de la nouriture : 
 --> c'est les ouvrières.
-- Les vidéos sont enregistrés par un caméra statique, on pourrait étudier la corrélation entre des pixels ayant la même position dans les frames consécutives pour détecter des mouvements des fourmis et noter leurs positions.
+- Les vidéos sont enregistrés par un caméra statique, on pourrait étudier la corrélation entre des pixels ayant la même position dans les frames consécutives (variation des valeurs) pour détecter des mouvements des fourmis et noter leurs positions.
