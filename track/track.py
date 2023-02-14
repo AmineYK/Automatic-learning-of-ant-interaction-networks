@@ -1,3 +1,11 @@
+
+'''
+    © Copyright (C) 2023
+    Collaborateurs : Amine YOUCEF KHODJA, Koceila KEMICHE, Hoang Son NGUYEN.*
+
+'''
+
+
 import cv2 as cv
 
 v = cv.VideoCapture('video_boite_entiere-test.ts')
