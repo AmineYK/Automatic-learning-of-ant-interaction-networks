@@ -1,5 +1,6 @@
 # PLDAC-Fourmis
 
+Machine learning of interaction networks in the ant Temnothorax nylanderi
 The aim of this project is to build and study by unsupervised and supervised learning
 interaction networks between individuals of an ant colony and the impact of pollution on the communication
 on the communication and the cognitive capacities of these animals. In ants it was shown that
