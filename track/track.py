@@ -8,10 +8,12 @@
 
 import cv2 as cv
 
-v = cv.VideoCapture('video_boite_entiere-test.ts')
+v = cv.VideoCapture('video_boite_entiere-test.mp4')
 bg = cv.imread("bg.png")
 bg = cv.cvtColor(bg,cv.COLOR_BGR2GRAY)
 bg = cv.GaussianBlur(bg, (21,21),0)
+
+idd = 0
 
 while True: # lire frame par frame
 	ok, frame = v.read()
@@ -26,14 +28,20 @@ while True: # lire frame par frame
 
 	for c in cnts: # tracer box
 		(x,y,w,h) = cv.boundingRect(c) # coord
-		cv.putText(frame,"fourmis",(x,y),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,0))
+		title = "fourmis "+str(idd)
+		cv.putText(frame,title,(x,y),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,0))
 		cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
+		idd += 1
+
 
 	cv.imshow("frame",frame)
-	cv.imshow("thresh",thresh)
+	# cv.imshow("thresh",thresh)
 	key = cv.waitKey(1)
 	if key == ord('q'):
 		break
 
 v.release()
 cv.destroyWindows()
+
+
+ 

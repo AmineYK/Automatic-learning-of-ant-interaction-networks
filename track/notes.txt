@@ -1,0 +1,30 @@
+Identifier uniquement une fourmi : 
+
+- Classe Fourmi 
+---> attributs : x , y , l , w , center , velocité 
+---> fonction : getters
+
+- Classe GestionFourmi
+---> listFourmis : {
+    id_fourmi : [donnees_frame_0 , .... , donnees_frame_n]
+} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ensemble d'appretissage  : 
+---> Ensemble de videos relatant des comportants des fourmis 
+
+Test : 
+---> Video en entrée avec de nouveaux comportants et essayer de predire les classes des fourmis
