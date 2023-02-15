@@ -13,7 +13,6 @@ bg = cv.imread("bg.png")
 bg = cv.cvtColor(bg,cv.COLOR_BGR2GRAY)
 bg = cv.GaussianBlur(bg, (21,21),0)
 
-idd = 0
 
 while True: # lire frame par frame
 	ok, frame = v.read()
@@ -31,7 +30,6 @@ while True: # lire frame par frame
 		title = "fourmis "+str(idd)
 		cv.putText(frame,title,(x,y),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,0))
 		cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
-		idd += 1
 
 
 	cv.imshow("frame",frame)
