@@ -88,10 +88,10 @@ def go_to_convergence(kf,path,position_reprise,niter_max=1000000,epsilon=100,ver
 
 
 def show_path_position(positions,bg):
-    img = cv2.imread(bg1)
+    img = cv2.imread(bg)
     img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
-    for pos in position:
+    for pos in positions:
         cv2.circle(img,pos,15,(0,20,220),-1)
 
     cv2.namedWindow(bg+"_test", cv2.WINDOW_NORMAL)
