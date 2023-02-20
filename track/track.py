@@ -6,52 +6,45 @@
 '''
 
 
+import numpy as np
 import cv2 as cv
-import sys
-import time
-sys.path.append('.')
-
 from fourmis import *
-
-v = cv.VideoCapture('video_boite_entiere-test.ts')
-bg = cv.imread("bg.png")
-bg = cv.cvtColor(bg,cv.COLOR_BGR2GRAY)
-bg = cv.GaussianBlur(bg, (21,21),0)
+from sys import argv
 
 
-bg_subtractor = cv.createBackgroundSubtractorMOG2()
-history_length = 250
-bg_subtractor.setHistory(history_length)
-
-erode_kernel = cv.getStructuringElement(
-        cv.MORPH_ELLIPSE, (3, 3))
-dilate_kernel = cv.getStructuringElement(
-        cv.MORPH_ELLIPSE, (5, 7))
-
-num_history = 0
+## argv[1]: longeur de trace, -1: all, 0: none, n : dernier n frames
 
 gFourmis = GestionFourmis()
 cpt = 0
 
-while True: # lire frame par frame
-    ok, frame = v.read()
-    # Apply the KNN/MOG(Gauss Mix) background subtractor.
-    fg_mask = bg_subtractor.apply(frame)
 
-    # Historie pour background
-    if num_history < history_length:
-        num_history += 1
-        continue
-    # Thresh
-    fg_mask = cv.GaussianBlur(fg_mask, (25,25),0) # enlever noise kernel (21,21)
-    _, thresh = cv.threshold(fg_mask, 30, 255,
-                                  cv.THRESH_BINARY)
+video = cv.VideoCapture('video_boite_entiere-test.ts')
+
+ret, frame = video.read()
+height, width, layers = frame.shape
+
+
+fgbg = cv.createBackgroundSubtractorMOG2()
+
+noy_len = 8
+noyau = np.ones((noy_len,noy_len))/(noy_len**2)
+ddepth = -1
+
+def blur(image):
+    return cv.filter2D(image,ddepth,noyau)
+
+thresh_val = 100
+
+while True:
+    _, frame = video.read()
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    fgmask = fgbg.apply(frame)
+    masque = blur(fgmask)
+    _, masque = cv.threshold(masque, thresh_val, 255, cv.THRESH_BINARY)
     
-    #cv.erode(thresh, erode_kernel, thresh, iterations=3)
-    cv.dilate(thresh, dilate_kernel, thresh, iterations=3)    
-    cnts, res = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE) # trouver contours dans thresh
-
-    for c in cnts: # tracer box
+    cons, _ = cv.findContours(masque, cv.RETR_LIST, cv.CHAIN_APPROX_NONE)
+    img = (1 - masque)*gray
+    for c in cons: # tracer box
         id = None
         (x,y,w,h) = cv.boundingRect(c) # coord
         if gFourmis.getNbFourmis() == 0:
@@ -71,18 +64,17 @@ while True: # lire frame par frame
             else:
                 gFourmis.majFourmis(id_chercher, (centre,None))
                 id =id_chercher
-        cv.putText(frame,f"fourmis {id}",(x,y),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,0))
+        cv.putText(frame,f"{id}",(x,y),cv.FONT_HERSHEY_SIMPLEX,1,(0,0,255))
         cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
-    cv.imshow("frame",frame)
-    cv.imshow("mask",fg_mask)
-    #cv.imshow("thresh",thresh)
-    key = cv.waitKey(1)
-    if key == ord('q'):
-        break
-    # if i >500:
-    #     break
+        if int(argv[1]) != 0:
+            len_trace = int(argv[1])
+            for i in range(cpt):
+                cv.polylines(frame, np.int32([gFourmis.getPath(i, len_trace)]), False, (200, 0, 100), thickness=1)
 
-v.release()
+    cv.imshow('frame', frame)
+    if cv.waitKey(1) & 0xFF == ord('q'):
+        break
+video.release()
 cv.destroyAllWindows()
 
 
