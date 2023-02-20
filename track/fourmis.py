@@ -28,7 +28,7 @@ class Fourmis():
         return self.velocite
     
     def getData(self):
-        return self.centre,self.velocite
+        return [self.centre,self.velocite]
 
     def getId(self):
         return self.id
@@ -52,3 +52,8 @@ class GestionFourmis():
         
     def getListe(self):
         return self.ListeFourmis
+
+    def getPath(self, id, his):
+        if his != -1:
+            return [i[0] for i in self.ListeFourmis[id][-his:]]
+        return [i[0] for i in self.ListeFourmis[id]]
